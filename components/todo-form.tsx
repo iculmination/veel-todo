@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckIcon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-
+import { useFocus } from "@/hooks/useFocus";
 
 export default function TodoForm({
   isCreatingNewTodo,
@@ -12,6 +11,14 @@ export default function TodoForm({
   addTodo,
 }: TodoFormProps) {
   const [newTitle, setNewTitle] = useState("");
+  const { ref: inputRef, setFocus } = useFocus();
+
+  useEffect(() => {
+    if (isCreatingNewTodo) {
+      setFocus();
+    }
+    // eslint-disable-next-line
+  }, [isCreatingNewTodo]);
 
   return (
     <AnimatePresence>
@@ -26,6 +33,7 @@ export default function TodoForm({
           <input
             className="rounded-lg h-9 px-4 text-black w-full"
             type="text"
+            ref={inputRef}
             placeholder="New todo..."
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
